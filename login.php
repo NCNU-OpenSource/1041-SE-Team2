@@ -11,6 +11,8 @@ if(isset($_POST['id']) && isset($_POST['password']))
 		if ($result = mysqli_query($conn,$sql)) {
 			if ($row=mysqli_fetch_array($result)) {
 				$_SESSION['Name']=$row['Name'];
+				$_SESSION['Id']=$row['Id'];
+				$_SESSION['Sex']=$row['Sex'];
 				header("location:game.php");
 			} else{
 				echo "Invalid Username or Password - Please try again <br />";
