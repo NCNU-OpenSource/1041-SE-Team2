@@ -1,0 +1,42 @@
+protected Void doInBackground(Void... params) {
+
+    String token = null;
+
+    try {
+
+        token = GoogleAuthUtil.getToken(activity, userId, scope);
+
+        if (token != null) {
+            //Log.e("token", token);
+
+            // send test mail
+            HttpTransport transport = new NetHttpTransport();
+            JsonFactory jsonFactory = new JacksonFactory();
+            // load secret  
+            //Reader secret = new InputStreamReader(activity.getAssets().open("secret.json"));
+            //GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(jsonFactory, secret);
+            // add scopes
+            //Collection<String> scopes = new ArrayList<String>();
+            //scopes.add(OAuthScopes.GMAIL.COMPOSE.getLocation());
+
+            //GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(transport, jsonFactory, clientSecrets, scopes)
+            //  .setAccessType("online").setApprovalPrompt("auto").build();
+
+            //String url = flow.newAuthorizationUrl().setRedirectUri(GoogleOAuthConstants.OOB_REDIRECT_URI).build();
+
+            //GoogleCredential credential = new GoogleCredential().setAccessToken(token);
+
+            Reader secret = new InputStreamReader(activity.getAssets().open("secret.json"));
+            GoogleCredential credential = new GoogleCredential.Builder().setClientSecrets(GoogleClientSecrets.load(jsonFactory, secret))
+                    .build();
+
+            Gmail gm = new Gmail.Builder(transport, jsonFactory, credential).setApplicationName("Test").build();
+
+            //Gmail gm = new Gmail(httpTrans, jsf, null); 
+
+            Properties properties = new Properties();
+            properties.put("mail.smtp.starttls.enable", "true");
+            properties.put("mail.smtp.starttls.required", "true");
+            properties.put("mail.smtp.sasl.enable", "false");
+
+// etc
