@@ -29,16 +29,17 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <link rel="shortcut icon" href="k.ico">
     <title>開心廚房-第二組</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="dist/css/bootstrap.min.css">
     <!-- 選擇性佈景主題 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="dist/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="sky.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="jquery.min.js"></script>
     <!-- 最新編譯和最佳化的 JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="dist/js/bootstrap.min.js"></script>
     <style type="text/css">
     	.img{
 			position:absolute;
@@ -72,11 +73,19 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
             margin-top:-270px;
             margin-left:-370px;       
         }
-        .money{
+        .level{
             position:absolute;
             left:50%;
             top:50%;
             margin-top:-190px;
+            margin-left:-366px;
+           
+        }
+        .money{
+            position:absolute;
+            left:50%;
+            top:50%;
+            margin-top:-220px;
             margin-left:-370px;
         }
         .col-md-2 {
@@ -98,7 +107,7 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
     	<img src="background.jpg" alt="背景" class="img" >
         <?php 
         if($_SESSION['Sex']=='m'){
-            echo "<img src=\"material/people.jpg\" alt=\"boy\" class=\"sex\" \> ";
+            echo "<img src=\"boy.jpg\" alt=\"boy\" class=\"sex\" \> ";
         }else{
             echo "<img src=\"girl.jpg\" alt=\"girl\" class=\"sex\" \> ";
         }
@@ -113,6 +122,10 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="level">
+            LV <?php echo $level; ?>
+            <br/>    
         </div>
         <div class="money">
             <span class="glyphicon glyphicon-usd" id="Addmoney"><?php echo $money; ?></span>

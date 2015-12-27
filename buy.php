@@ -14,8 +14,11 @@ if(isset($_POST['Oven_num'])){
 		$amount = $money-$oven_num*1000;
 		$sql1="update Account set Money=$amount ,Oven_num=$Oven+$oven_num where Id='$id' ";
 		mysqli_query($conn,$sql1);
-		echo "<script>alert('購買成功！')</script>";
+		if($oven_num!=0){
+			echo "<script>alert('購買成功！')</script>";
+		}
 		echo $amount;
+
 	}else{
 		echo "<script>alert('餘額不足！')</script>"; 
 		echo "$money";
@@ -34,7 +37,9 @@ if(isset($_POST['Package'])){
 		$amount = $money-$package*100;
 		$sql1="update Account set Money=$amount ,Package=$Package+$package where Id='$id' ";
 		mysqli_query($conn,$sql1);
-		echo "<script>alert('購買成功！')</script>";
+		if($package!=0){
+			echo "<script>alert('購買成功！')</script>";
+		}
 		echo $amount;
 	}else{
 		echo "<script>alert('餘額不足！')</script>"; 
