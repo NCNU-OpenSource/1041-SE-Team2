@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Dialog - Animation</title>
+  <link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.css">
+  <script src="jquery-1.10.2.min.js"></script>
+  <script src="jquery-ui-1.11.4/jquery-ui.js"></script>
+  <style>
+  #breadbar ul#gallery{
+    background-color:#afa;
+    position:absolute;
+    top:50%;
+    width:100%;
+    height:120px;
+    margin-top:220px;
+  }
+  #gallery { float: left; width: 65%; }
+  .gallery.custom-state-active { background: #eee; }
+  .gallery li { float: left; width: 96px; padding: 0.4em; margin: 0 0.4em 0.4em 0; text-align: center; }
+  .gallery li h5 { margin: 0 0 0.4em; cursor: move; }
+  .gallery li a { float: right; }
+  .gallery li a.ui-icon-zoomin { float: left; }
+  .gallery li img { width: 100%; cursor: move; }
+  #panel input{width:50px;}
+ 
+  #trash { float: right; width: 100%; min-height: 18em; padding: 1%; }
+  #trash h4 { line-height: 16px; margin: 0 0 0.4em; }
+  #trash h4 .ui-icon { float: left; }
+  #trash .gallery h5 { display: none; }
+  </style>
+  <script>
+  $(function() {
+    $(".ui-widget").hide();
+    $( "#dialog" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 500
+      },
+      close: function( event, ui ) {
+        $('#breadbar').hide();
+      },
+      position: { my: "center", at: "0 top", of: window }
+    });
+ 
+    $( "#opener" ).click(function() {
+      $( "#dialog" ).dialog( "open" );
+      $('#breadbar').show();
+    });
+  });
+  $(function() {
+    // there's the gallery and the trash
+    var $gallery = $( "#gallery" ),
+      $trash = $( "#trash" );
+ 
+    // let the gallery items be draggable
+    $( "li", $gallery ).draggable({
+      cancel: "a.ui-icon", // clicking an icon won't initiate dragging
+      revert: "invalid", // when not dropped, the item will revert back to its initial position
+      containment: "document",
+      helper: "clone",
+      cursor: "move"
+    });
+ 
+    // let the trash be droppable, accepting the gallery items
+    $trash.droppable({
+      accept: "#gallery > li",
+      activeClass: "ui-state-highlight",
+      drop: function( event, ui ) {
+        deleteImage( ui.draggable );
+        alert(ui.draggable.find("h5").text());
+      }
+    });
+ 
+    // let the gallery be droppable as well, accepting items from the trash
+    $gallery.droppable({
+      accept: "#trash li",
+      activeClass: "custom-state-active",
+      drop: function( event, ui ) {
+        recycleImage( ui.draggable );
+        var item= ui.draggable.find("h5").text();
+        $('#'+item).remove();
+      }
+    });
+ 
+    // image deletion function
+    var recycle_icon = "<a href='link/to/recycle/script/when/we/have/js/off' title='Recycle this image' class='ui-icon ui-icon-refresh'>Recycle image</a>";
+    function deleteImage( $item ) {
+      $item.fadeOut(function() {
+        var $list = $( "ul", $trash ).length ?
+          $( "ul", $trash ) :
+          $( "<ul class='gallery ui-helper-reset' id='oven'/>" ).appendTo( $trash );
+ 
+        $item.find( "a.ui-icon-trash" ).remove();
+        $item/*.append( recycle_icon )*/.appendTo( $list ).fadeIn(function() {
+          $item
+            .animate({ width: "48px" })
+            .find( "img" )
+              .animate({ height: "36px" });
+        });
+      }); 
+    }
+    // image recycle function
+    var trash_icon = "<a href='link/to/trash/script/when/we/have/js/off' title='Delete this image' class='ui-icon ui-icon-trash'>Delete image</a>";
+    function recycleImage( $item ) {
+      $item.fadeOut(function() {
+        $item
+          .find( "a.ui-icon-refresh" )
+            .remove()
+          .end()
+          .css( "width", "96px")
+          // .append( trash_icon )
+          .find( "img" )
+            .css( "height", "72px" )
+          .end()
+          .appendTo( $gallery )
+          .fadeIn();
+      });
+    }
+     // 檢查烤箱數量以及長度是否符合
+    $trash.on( "drop", function( event, ui ) {
+       setTimeout(function () {
+                 $("#droppable").promise().done(function () {
+                     if( $("ul#oven>li").length >2){
+                        alert('Exceed'); 
+                        recycleImage( ui.draggable );
+                     }else{
+                        $('#panel').append("<div id="+ui.draggable.find('h5').text()+">"+ui.draggable.find('h5').text()+':'+"<input type='text' name='"+ui.draggable.find('h5').text()+"' value='1' ></div>");
+                     }
+                 });
+             }, 1000);
+    });
+  });
+
+  </script>
+</head>
+<body>
+ 
+<div id="dialog" title="烤箱">
+  <div id="trash" class="ui-widget-content ui-state-default">
+<div id="panel"></div>
+  <hr/>
+  </div>
+</div>
+
+<div class="ui-widget ui-helper-clearfix" id="breadbar">
+<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
+  <li class="ui-widget-content ui-corner-tr">
+    <h5 class="ui-widget-header">toast</h5>
+    <img src="material/bread1.png" alt="The peaks of High Tatras" width="96" height="72">
+    <!-- <a href="images/high_tatras.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
+    <a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
+ -->  </li>
+  <li class="ui-widget-content ui-corner-tr">
+    <h5 class="ui-widget-header">croissant</h5>
+    <img src="material/bread2.png" alt="The chalet at the Green mountain lake" width="96" height="72">
+    <!-- <a href="images/high_tatras2.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
+    <a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
+ -->  </li>
+  <li class="ui-widget-content ui-corner-tr">
+    <h5 class="ui-widget-header">marfin</h5>
+    <img src="material/bread3.png" alt="Planning the ascent" width="96" height="72">
+   <!--  <a href="images/high_tatras3.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
+    <a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
+ -->  </li>
+  <li class="ui-widget-content ui-corner-tr">
+    <h5 class="ui-widget-header">donut</h5>
+    <img src="material/bread4.png" alt="On top of Kozi kopka" width="96" height="72">
+    <!-- <a href="images/high_tatras4.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
+    <a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
+ -->  </li>
+</ul>
+ </div>
+
+<button id="opener">Open Dialog</button>
+
+
+ 
+</body>
+</html>
