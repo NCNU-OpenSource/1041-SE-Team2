@@ -37,7 +37,7 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
     <!-- 選擇性佈景主題 -->
     <link rel="stylesheet" href="dist/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="sky.css">
-    <script src="jquery.min.js"></script>
+    <script src="jquery-1.10.2.min.js"></script>
     <!-- 最新編譯和最佳化的 JavaScript -->
     <script src="dist/js/bootstrap.min.js"></script>
     <style type="text/css">
