@@ -1,20 +1,15 @@
 <!DOCTYPE html>
-<html>
+    <html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>圖片檔案上傳</title>
+    </head>
+    <body>
+	<H3>圖片檔案上傳:<HR></H3>
+    <form Action="upload.php" Method="POST" Enctype="multipart/form-data">
+    <input Type="File" Name="upfile" ><br>
+    <input Type="Submit" value=" 開始上傳 ">
+	<p>照片大小不得超過80kb</p>
+    </form>
 
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>上傳大頭貼</title>
-</head>
-
-<body>
-
-<form enctype="multipart/form-data" method="POST" action="upload.php">
-
-  <input type="file" name="image" required/>
-
-  <input type="submit" value="確定上傳"/>
-
-</form>
-
-</body>
-</html> 
+    </body></html>
