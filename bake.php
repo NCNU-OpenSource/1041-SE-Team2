@@ -11,6 +11,7 @@ if($rs=mysqli_fetch_array($result)){
 }
 
 $value=json_encode($data);
+
 //json 轉成 stdClass Objects
 $std_objects=json_decode($value);
 
@@ -47,8 +48,39 @@ foreach ($array as $key => $value) {
 	}
 }
 
+
+//計算材料包夠不夠
+$pack_num=0;
+$select_owner_package="select Package from Account where id='$id' ";
+$result_owner_package=mysqli_query($conn,$select_owner_package);
+if($rs_owner_package=mysqli_fetch_array($result_owner_package)){
+	$total_package=$rs_owner_package['Package'];
+}
+
+foreach ($array as $key => $value) {
+	foreach($value as $key1 => $value1){
+		if($key1=='name'){
+			$sql1="select Count from Bread where Name='$value1' ";
+			$result1=mysqli_query($conn,$sql1);
+			if($rs1=mysqli_fetch_array($result1)){
+				$count=$rs1['Count'];
+			}
+		}
+		if($key1=='value'){
+			$pack_num+=$count*$value1;
+		}
+	}
+}
+
+//查詢所有麵包花費的時間
+$select_all_bread_cost="select Name,Cost_time from Bread";
+
+
 if($number>$unused){
 	echo "烤箱沒這麼多！請至商店購買";
+}
+else if($pack_num>$total_package){
+	echo "材料包沒這麼多！請至商店購買";
 }else{
 	//烤的細節
 	//查出所有能用的烤箱

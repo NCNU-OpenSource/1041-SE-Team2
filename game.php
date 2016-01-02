@@ -181,7 +181,7 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
     <div class="ui-widget ui-helper-clearfix" id="breadbar">
         <ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
         </ul>
-    </div>
+    </div>  
 
 
 
@@ -437,10 +437,12 @@ while($rs_bread=mysqli_fetch_array($result_bread)){
 }
 echo ";</script>";
 
-$select_all_oven="select COUNT(*) as total from Oven where Owner='$id'";
+$select_all_oven="select COUNT(*) as total,Package from Oven left join Account on Account.Id=Oven.Owner where Owner='$id'
+";
 $result_all_oven=mysqli_query($conn,$select_all_oven);
 if($rs_all_oven=mysqli_fetch_array($result_all_oven)){
     $total=$rs_all_oven['total'];
+    $package_num=$rs_all_oven['Package'];
 }
 
 $select_oven="select COUNT(*) as used from Oven where Owner='$id' and State=1 ";
@@ -448,7 +450,7 @@ $result_oven=mysqli_query($conn,$select_oven);
 if($rs_oven=mysqli_fetch_array($result_oven)){
     $used=$rs_oven['used'];
 }
-echo "<script>$('#oven_status').append('你有",$rs_all_oven['total'],"個烤箱可以使用，使用",$rs_oven['used'],"個烤箱中。');</script>";
+echo "<script>$('#oven_status').append('你有",$rs_all_oven['total'],"個烤箱可以使用，使用",$rs_oven['used'],"個烤箱中。<br/>材料包數量： ",$package_num,"');</script>";
 $canuse=$total-$used;
 echo "<script>var canuse=",$canuse,";</script>";
 
