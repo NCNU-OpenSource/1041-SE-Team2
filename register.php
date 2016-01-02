@@ -9,6 +9,8 @@ $name=mysqli_real_escape_string($conn,$_POST['name']);
 if ($id) {
 	$sql = "insert into Account (Id,Password,Sex,Name) values ('$id', '$password','$sex','$name');";
 	mysqli_query($conn,$sql) or die("MySQL insert message error"); //執行SQL
+	$sql2 ="insert into Oven (Owner) values('$id');";
+	mysqli_query($conn,$sql2)or die("MySQL insert message error"); //執行SQL
 	echo "<script>alert('註冊成功!');
 			window.location.href=\"index.html\"; </script>";
 	

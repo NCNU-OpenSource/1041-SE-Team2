@@ -14,6 +14,7 @@ if($rs=mysqli_fetch_array($result)){
     $exp=$rs['Exp'];
     $level=$rs['Level'];
     $id=$rs['Id'];
+    $owner_oven=$rs['Oven_num'];
 }
 
 $sql2="select Exp from Level where Lev=$level+1";
@@ -23,7 +24,6 @@ if($rs2=mysqli_fetch_array($results)){
 }
 
 echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  //傳值給javascript
-
 ?>
 
 <!DOCTYPE html>
@@ -33,6 +33,7 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
     <link rel="shortcut icon" href="k.ico">
     <title>開心廚房-第二組</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.css">
     <link rel="stylesheet" href="dist/css/bootstrap.min.css">
     <!-- 選擇性佈景主題 -->
     <link rel="stylesheet" href="dist/css/bootstrap-theme.min.css">
@@ -40,8 +41,34 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
     <script src="jquery-1.10.2.min.js"></script>
     <!-- 最新編譯和最佳化的 JavaScript -->
     <script src="dist/js/bootstrap.min.js"></script>
+    <script src="jquery-ui-1.11.4/jquery-ui.js"></script>
     <style type="text/css">
-    	.img{
+    #bakedbread{
+        position:absolute;
+        left:81.5%;
+        width:18%;
+        background:#ddd;
+    }
+  #breadbar ul#gallery{
+    position:absolute;
+    top:50%;
+    width:100%;
+    height:140px;
+    margin-top:200px;
+  }
+  #gallery { float: left; width: 65%; }
+  .gallery.custom-state-active { background: #eee; }
+  .gallery li { float: left; width: 96px; padding: 0.4em; margin: 0 0.4em 0.4em 0; text-align: center; }
+  .gallery li h5 { margin: 0 0 0.4em; cursor: move; }
+  .gallery li a { float: right; }
+  .gallery li a.ui-icon-zoomin { float: left; }
+  .gallery li img { width: 100%; cursor: move; }
+  #panel input{width:50px;}
+ 
+  #trash {float: left; width: 20%; min-height: 18em;   }
+  #trash h4 { line-height: 16px; margin: 0 0 0.4em; }
+  #trash .gallery h5 { display: none; }
+    	.imga{
 			position:absolute;
 			left:50%;
 			top:50%;
@@ -79,7 +106,6 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
             top:50%;
             margin-top:-190px;
             margin-left:-366px;
-           
         }
         .money{
             position:absolute;
@@ -99,12 +125,11 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
             max-width:200px;
             max-height:200px;
         }
-        
     </style>
 </head>
 <body>
     <div class="container">
-    	<img src="background.jpg" alt="背景" class="img" >
+    	<img src="background.jpg" alt="背景" class="imga" >
         <?php 
         if($_SESSION['Sex']=='m'){
             echo "<img src=\"boy.jpg\" alt=\"boy\" class=\"sex\" \> ";
@@ -133,9 +158,29 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
         <button type="button" class="btn btn-info" id="logout"> 登出 <span class="glyphicon glyphicon-user"></span></button><br/><br/><br/>
         <div class="btn-group-lg">
             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#storeModal"> 商 店 <span class="glyphicon glyphicon-shopping-cart"></span></button><br/><br/>
-            <button type="button" class="btn btn-default"> 烘 培 <span class="glyphicon glyphicon-fire"></span></button><br/><br/>
+            <button type="button" class="btn btn-default" id="opener"> 烘 培 <span class="glyphicon glyphicon-fire"></span></button><br/><br/>
             <button type="button" class="btn btn-default"> 背 包 <span class="badge"></span><span class="glyphicon glyphicon-briefcase"></span></button><br/><br/>
-        <div>
+        </div>
+    </div>
+
+
+    <div id="trash" class="ui-widget-content ui-state-default">
+        <form enctype='application/json' id="breadform"  >
+        <h4 class="ui-widget-header"> Oven</h4>
+        <button type="button" class="btn btn-default" id="bake">烘！</button>
+        <h5 id="oven_status"></h5>
+        <div id="panel"></div>
+        <hr/>
+        </form>
+    </div>
+
+    <div id="bakedbread" >
+        <h4 class="ui-widget-header"> Baking</h4>
+    </div>
+
+    <div class="ui-widget ui-helper-clearfix" id="breadbar">
+        <ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
+        </ul>
     </div>
 
 
@@ -181,6 +226,11 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
 <script>
 $(document).ready(function() {
+    $('#bake').hide();  
+    $("#trash").hide();
+    $('#bakedbread').hide();
+    $('#breadbar').hide();
+
    $('.progress-bar').css("width",exp);  //產生經驗值條
    //烤箱箭頭
    $('#o_right').on("click",oadd);
@@ -190,8 +240,96 @@ $(document).ready(function() {
    $('#p_left').on('click',psubtract);
    //登出
     $('#logout').on("click",out);
-    
+
+        $( "#opener" ).click(function() {
+        $("#trash").slideToggle();
+        $('#breadbar').fadeToggle();
+        $('#bakedbread').fadeToggle();
+    });
+    // there's the gallery and the trash
+    var $gallery = $( "#gallery" ),
+      $trash = $( "#trash" );
+ 
+    // let the gallery items be draggable
+    $( "li", $gallery ).draggable({
+      cancel: "a.ui-icon", // clicking an icon won't initiate dragging
+      revert: "invalid", // when not dropped, the item will revert back to its initial position
+      containment: "document",
+      helper: "clone",
+      cursor: "move",
+    });
+ 
+    // let the trash be droppable, accepting the gallery items
+    $trash.droppable({
+      accept: "#gallery > li",
+      activeClass: "ui-state-highlight",
+      drop: function( event, ui ) {
+        deleteImage( ui.draggable );
+        alert(ui.draggable.find("h5").text());
+         if($("ul#oven >li").length+1>0){
+            $('#bake').show();
+        }   
+      }
+    });
+ 
+    // let the gallery be droppable as well, accepting items from the trash
+    $gallery.droppable({
+      accept: "#trash li",
+      activeClass: "custom-state-active",
+      drop: function( event, ui ) {
+        recycleImage( ui.draggable );
+        var item= ui.draggable.find("h5").text();
+        $('#'+item).remove();     
+    }
+    });
+ 
+    // image deletion function
+    function deleteImage( $item ) {
+      $item.fadeOut(function() {
+        var $list = $( "ul", $trash ).length ?
+          $( "ul", $trash ) :
+          $( "<ul class='gallery ui-helper-reset' id='oven'/>" ).appendTo( $trash );
+ 
+        $item.find( "a.ui-icon-trash" ).remove();
+        $item/*.append( recycle_icon )*/.appendTo( $list ).fadeIn(function() {
+          $item
+            .animate({ width: "48px" })
+            .find( "img" )
+              .animate({ height: "36px" });
+        });
+      }); 
+    }
+    // image recycle function
+    function recycleImage( $item ) {
+      $item.fadeOut(function() {
+        $item
+          .find( "a.ui-icon-refresh" )
+            .remove()
+          .end()
+          .css( "width", "96px")
+          // .append( trash_icon )
+          .find( "img" )
+            .css( "height", "72px" )
+          .end()
+          .appendTo( $gallery )
+          .fadeIn();
+      });
+    }
+     // 檢查烤箱數量以及長度是否符合
+    $trash.on( "drop", function( event, ui ) {
+       setTimeout(function () {
+                 $("#droppable").promise().done(function () {
+                     if( $("ul#oven>li").length > canuse){
+                        alert('超過你擁有的烤箱數量'); 
+                        recycleImage( ui.draggable );
+                     }else{
+                        $('#panel').append("<div id="+ui.draggable.find('h5').text()+">"+ui.draggable.find('h5').text()+':'+"<input type='text' name='"+ui.draggable.find('h5').text()+"' value='1' ></div>");
+                     }
+                 });
+             }, 1000);
+    });
 });
+
 function out(){ 
     window.location.href="logout.php";
 }
@@ -267,4 +405,60 @@ $('#p_buy').on("click",function (){
             }
         });
 });
+
+//烘
+$('#bake').on("click",function (){ 
+    var data=$('#breadform').serializeArray();
+    $.ajax({
+        url: 'bake.php',
+        dataType: 'html',
+        type: 'GET',
+        data: { 
+            Id:'<?php echo $id; ?>',
+            data:data
+        },
+        error: function(xhr) {
+               // $('#'+DIV).html(xhr);
+            },
+        success: function(response) {
+           alert(response);
+           console.log(response);
+        }
+    });
+});
 </script>
+<?php
+$select_bread="select Name,Count from Bread where Level <= $level";
+$result_bread=mysqli_query($conn,$select_bread);
+
+echo "<script>$('#gallery')";
+while($rs_bread=mysqli_fetch_array($result_bread)){
+  echo ".append('<li class=\"ui-widget-content ui-corner-tr\"><h5 class=\"ui-widget-header\">",$rs_bread['Name'],"</h5><img src=\"material/",$rs_bread['Name'],".png\" alt=\"Bread\" width=\"96\" height=\"72\"><a href=\"#\" class=\"ui-icon-zoomin\">cost:",$rs_bread['Count'],"</a></li>')";
+}
+echo ";</script>";
+
+$select_all_oven="select COUNT(*) as total from Oven where Owner='$id'";
+$result_all_oven=mysqli_query($conn,$select_all_oven);
+if($rs_all_oven=mysqli_fetch_array($result_all_oven)){
+    $total=$rs_all_oven['total'];
+}
+
+$select_oven="select COUNT(*) as used from Oven where Owner='$id' and State=1 ";
+$result_oven=mysqli_query($conn,$select_oven);
+if($rs_oven=mysqli_fetch_array($result_oven)){
+    $used=$rs_oven['used'];
+}
+echo "<script>$('#oven_status').append('你有",$rs_all_oven['total'],"個烤箱可以使用，使用",$rs_oven['used'],"個烤箱中。');</script>";
+$canuse=$total-$used;
+echo "<script>var canuse=",$canuse,";</script>";
+
+$select_used_oven="select Count(*) as total,* from Oven where Owner='$id' and State=1 ";
+$result_used_oven=mysqli_query($conn,$select_used_oven);
+if(empty($result_used_oven)){
+    //do nothing
+}else{
+    while($rs_used_oven=mysqli_fetch_array($result_used_oven)){
+
+    }
+}
+?>

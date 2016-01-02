@@ -13,6 +13,10 @@ if(isset($_POST['Oven_num'])){
 	if(( $money >= $oven_num * 1000)){
 		$amount = $money-$oven_num*1000;
 		$sql1="update Account set Money=$amount ,Oven_num=$Oven+$oven_num where Id='$id' ";
+		for($i=0;$i<$oven_num;$i++){
+			$sql2 ="insert into Oven (Owner) values('$id');";
+			mysqli_query($conn,$sql2)or die("MySQL insert message error"); //執行SQL
+		}
 		mysqli_query($conn,$sql1);
 		if($oven_num!=0){
 			echo "<script>alert('購買成功！')</script>";
