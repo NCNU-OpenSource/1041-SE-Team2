@@ -423,6 +423,7 @@ $('#bake').on("click",function (){
         success: function(response) {
            alert(response);
            console.log(response);
+           location.reload();
         }
     });
 });
@@ -450,10 +451,12 @@ $result_oven=mysqli_query($conn,$select_oven);
 if($rs_oven=mysqli_fetch_array($result_oven)){
     $used=$rs_oven['used'];
 }
-echo "<script>$('#oven_status').append('你有",$rs_all_oven['total'],"個烤箱可以使用，使用",$rs_oven['used'],"個烤箱中。<br/>材料包數量： ",$package_num,"');</script>";
+echo "<script>$('#oven_status').append('你有",$rs_all_oven['total']-$rs_oven['used'],"個烤箱可以使用，使用",$rs_oven['used'],"個烤箱中。<br/>材料包數量： ",$package_num,"');</script>";
 $canuse=$total-$used;
 echo "<script>var canuse=",$canuse,";</script>";
 
+//使用中的烤箱顯示在螢幕右邊，缺倒數，時間到自動放進包包
+//包包還沒完成 ，點擊可以賣掉 經驗值增加，錢增加
 $select_used_oven="select Count(*) as total,* from Oven where Owner='$id' and State=1 ";
 $result_used_oven=mysqli_query($conn,$select_used_oven);
 if(empty($result_used_oven)){
