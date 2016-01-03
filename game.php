@@ -4,9 +4,9 @@ if(empty($_SESSION['Id'])){
     header("location:index.html");
 }
 $id = $_SESSION['Id'];
-echo $_SESSION['Name']." ";
-echo $_SESSION['Id']." ";
-echo $_SESSION['Sex']." ";
+// echo $_SESSION['Name']." ";
+// echo $_SESSION['Id']." ";
+// echo $_SESSION['Sex']." ";
 $sql="select * from Account where Id='$id' ";
 $result=mysqli_query($conn,$sql);
 if($rs=mysqli_fetch_array($result)){
@@ -24,6 +24,23 @@ if($rs2=mysqli_fetch_array($results)){
 }
 
 echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  //傳值給javascript
+
+
+//判斷烤箱是否到期
+$indentify_bake_time="select Time,No,State from Oven where Owner='$id' ";  
+$result_indentify=mysqli_query($conn,$indentify_bake_time);
+$now_time=time();
+$convert_time=date("Y-m-d H:i:s",$now_time);
+
+while($rs_identify=mysqli_fetch_array($result_indentify)){
+    if(strtotime($convert_time) - strtotime($rs_identify['Time'])>=0 && ($rs_identify['Time'])!=null){
+        //時間到了 更改烤箱狀態 把東西放進背包(State=3)
+        $No=$rs_identify['No'];
+        $update_bake="update Oven set Time=null,State=2 where No=$No ";
+        mysqli_query($conn,$update_bake);
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -43,11 +60,13 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
     <script src="dist/js/bootstrap.min.js"></script>
     <script src="jquery-ui-1.11.4/jquery-ui.js"></script>
     <style type="text/css">
+    
     #bakedbread{
         position:absolute;
         left:81.5%;
         width:18%;
         background:#ddd;
+
     }
   #breadbar ul#gallery{
     position:absolute;
@@ -159,7 +178,7 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
         <div class="btn-group-lg">
             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#storeModal"> 商 店 <span class="glyphicon glyphicon-shopping-cart"></span></button><br/><br/>
             <button type="button" class="btn btn-default" id="opener"> 烘 培 <span class="glyphicon glyphicon-fire"></span></button><br/><br/>
-            <button type="button" class="btn btn-default"> 背 包 <span class="badge"></span><span class="glyphicon glyphicon-briefcase"></span></button><br/><br/>
+            <button type="button" class="btn btn-default" id="Bag_Modal"> 背 包 <span class="badge"></span><span class="glyphicon glyphicon-briefcase"></span></button><br/><br/>
         </div>
     </div>
 
@@ -176,6 +195,8 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
 
     <div id="bakedbread" >
         <h4 class="ui-widget-header"> Baking</h4>
+        <table class="table" id="breadtable">
+        </table>
     </div>
 
     <div class="ui-widget ui-helper-clearfix" id="breadbar">
@@ -221,6 +242,28 @@ echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  
       </div>
     </div>
     <!-- End -->
+
+    <!-- Bag Modal -->
+    <div class="modal fade" id="BagModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <br/>
+              <table class="table" id="bagtable">
+              </table>
+            </div>
+
+            <div class="modal-body">
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
 </body>
 </html>
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
@@ -265,7 +308,7 @@ $(document).ready(function() {
       activeClass: "ui-state-highlight",
       drop: function( event, ui ) {
         deleteImage( ui.draggable );
-        alert(ui.draggable.find("h5").text());
+        //alert(ui.draggable.find("h5").text());
          if($("ul#oven >li").length+1>0){
             $('#bake').show();
         }   
@@ -381,6 +424,7 @@ $('#o_buy').on("click",function (){
                 //$('#'+DIV).html(response); //set the html content of the object msg
                 $('.money').empty();
                 $('.money').append("<span class='glyphicon glyphicon-usd' id='Addmoney'></span>").append(response);
+                location.reload();
             }
         });
 });
@@ -402,6 +446,7 @@ $('#p_buy').on("click",function (){
                 //$('#'+DIV).html(response); //set the html content of the object msg
                 $('.money').empty();
                 $('.money').append("<span class='glyphicon glyphicon-usd' id='Addmoney'></span>").append(response);
+                location.reload();
             }
         });
 });
@@ -427,6 +472,33 @@ $('#bake').on("click",function (){
         }
     });
 });
+
+//背包畫面
+$('#Bag_Modal').on('click',function(){
+    $.ajax({
+        url: 'bag.php',
+        dataType: 'html',
+        type: 'POST',
+        data: { 
+            Id:'<?php echo $id; ?>',
+        },
+        error: function(xhr) {
+               // $('#'+DIV).html(xhr);
+            },
+        success: function(response) {
+          $('#bagtable').empty();
+          $('#bagtable').append('<tr><td>麵包名稱</td><td>經驗值</td><td>金錢</td><td>賣掉</td><tr/>');
+          var cart= JSON.parse(response);
+          //alert(cart.length);
+          for(var i=0;i<cart.length;i++){
+            $('#bagtable').append('<tr><td>'+cart[i]['Now_id']+'</td><td>'+cart[i]['Exp']+'</td><td>'+cart[i]['Price']+'</td><td><a href="sale.php?No='+cart[i]['No']+'&Name='+cart[i]['Now_id']+'" >賣掉</a></td><tr/>');
+          }
+          console.log(response);
+            //location.reload();
+        }
+    });
+    $('#BagModal').modal('toggle');
+});
 </script>
 <?php
 $select_bread="select Name,Count from Bread where Level <= $level";
@@ -446,7 +518,7 @@ if($rs_all_oven=mysqli_fetch_array($result_all_oven)){
     $package_num=$rs_all_oven['Package'];
 }
 
-$select_oven="select COUNT(*) as used from Oven where Owner='$id' and State=1 ";
+$select_oven="select COUNT(*) as used from Oven where Owner='$id' and State=1 or State=2";
 $result_oven=mysqli_query($conn,$select_oven);
 if($rs_oven=mysqli_fetch_array($result_oven)){
     $used=$rs_oven['used'];
@@ -455,15 +527,16 @@ echo "<script>$('#oven_status').append('你有",$rs_all_oven['total']-$rs_oven['
 $canuse=$total-$used;
 echo "<script>var canuse=",$canuse,";</script>";
 
-//使用中的烤箱顯示在螢幕右邊，缺倒數，時間到自動放進包包
-//包包還沒完成 ，點擊可以賣掉 經驗值增加，錢增加
-$select_used_oven="select Count(*) as total,* from Oven where Owner='$id' and State=1 ";
+//使用中的烤箱顯示在螢幕右邊，缺倒數
+$select_used_oven="select * from Oven where Owner='$id' and State=1 ";
 $result_used_oven=mysqli_query($conn,$select_used_oven);
 if(empty($result_used_oven)){
     //do nothing
 }else{
+    echo "<script>$('#breadtable').append('<tr><td> 時間 </td><td> 麵包名稱 </td><td> 烤箱編號 </td>')";
     while($rs_used_oven=mysqli_fetch_array($result_used_oven)){
-
+        echo ".append('</tr><tr><td> ",$rs_used_oven['Time']," </td><td>",$rs_used_oven['Now_id'],"</td><td>",$rs_used_oven['No'],"</td>')";
     }
+    echo ".append('</tr>');</script>";
 }
 ?>
