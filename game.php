@@ -25,6 +25,18 @@ if($rs2=mysqli_fetch_array($results)){
 
 echo "<script>var exp1=".$exp/$experience."*100;var exp=exp1+\"%\";</script>";  //傳值給javascript
 
+//等級提升
+$level_up="select * from Level where Lev=$level+1";
+$result_level=mysqli_query($conn,$level_up);
+if($rs_level=mysqli_fetch_array($result_level)){  
+  //如果經驗值達到可以升等的話
+  if($exp>=$rs_level['Exp']){
+      $UP="update Account set Level=Level+1 where id='$id' ";
+      mysqli_query($conn,$UP);
+      echo "<script>alert('等級提升！');</script>";
+      header('location:game.php');
+  }  
+}
 
 //判斷烤箱是否到期
 $indentify_bake_time="select Time,No,State from Oven where Owner='$id' ";  

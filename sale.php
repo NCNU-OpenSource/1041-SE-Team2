@@ -21,5 +21,5 @@ mysqli_query($conn,$sql);
 $user="update Account set Exp=Exp+$Exp , Money=Money+$Money where Id='$id' ";
 mysqli_query($conn,$user);
 
-echo "<script>alert('成功賣出，經驗值增加",$Exp,"，錢增加",$Money,"');history.back();</script>";
+echo "<script>alert('成功賣出，經驗值增加",$Exp,"，錢增加",$Money,"');window.location.href='game.php';</script>";
 ?>
