@@ -136,14 +136,14 @@ while($rs_identify=mysqli_fetch_array($result_indentify)){
             position:absolute;
             left:50%;
             top:50%;
-            margin-top:-190px;
+            margin-top:-210px;
             margin-left:-366px;
         }
         .money{
             position:absolute;
             left:50%;
             top:50%;
-            margin-top:-220px;
+            margin-top:-230px;
             margin-left:-370px;
         }
         .col-md-2 {
@@ -181,6 +181,7 @@ while($rs_identify=mysqli_fetch_array($result_indentify)){
             </div>
         </div>
         <div class="level">
+            <?php echo $_SESSION['Name'];?><br/>
             LV <?php echo $level; ?>
             <br/>    
         </div>
