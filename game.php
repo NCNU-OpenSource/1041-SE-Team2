@@ -60,7 +60,7 @@ while($rs_identify=mysqli_fetch_array($result_indentify)){
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="k.ico">
+    <link rel="shortcut icon" href="fork3.ico">
     <title>開心廚房-第二組</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.css">
@@ -72,6 +72,8 @@ while($rs_identify=mysqli_fetch_array($result_indentify)){
     <!-- 最新編譯和最佳化的 JavaScript -->
     <script src="dist/js/bootstrap.min.js"></script>
     <script src="jquery-ui-1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="happyK.css">
+
     <style type="text/css">
     
     #bakedbread{
