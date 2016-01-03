@@ -15,7 +15,7 @@ if(isset($_POST['id']) && isset($_POST['password']))
 				$_SESSION['Sex']=$row['Sex'];
 				header("location:game.php");
 			} else{
-				echo "Invalid Username or Password - Please try again <br />";
+				echo "<script>alert('Invalid Username or Password - Please try again');window.location.href='index.html';</script>";
 			}
 		}
 }else{
