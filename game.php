@@ -38,6 +38,7 @@ if($rs_level=mysqli_fetch_array($result_level)){
   }  
 }
 
+
 //判斷烤箱是否到期
 $indentify_bake_time="select Time,No,State from Oven where Owner='$id' ";  
 $result_indentify=mysqli_query($conn,$indentify_bake_time);
