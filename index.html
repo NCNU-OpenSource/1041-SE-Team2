@@ -17,7 +17,6 @@
 
 <body>
     <div>
-    <div id="text" style="position:absolute;">Happy kitchen :)</div>
 
        
         <div id="area">
@@ -98,13 +97,7 @@
 <script>
 $(document).ready(function() {
     $('#area').hide();
-    var clwidth=document.body.clientWidth/2-50;
-    $("#text").animate({left:clwidth,top:'150px'},"slow")
-        .delay(500)
-        .animate({top:'50px'},"normal",show);
-});
-function show(){
-    $('#text').fadeOut();
     $('#area').slideDown(1000);
-}
+   });
+
 </script>
