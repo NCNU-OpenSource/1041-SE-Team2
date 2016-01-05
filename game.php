@@ -15,6 +15,7 @@ if($rs=mysqli_fetch_array($result)){
     $level=$rs['Level'];
     $id=$rs['Id'];
     $owner_oven=$rs['Oven_num'];
+	$photo_name = $rs['filename'];
 }
 
 $sql2="select Exp from Level where Lev=$level+1";
@@ -78,12 +79,16 @@ while($rs_identify=mysqli_fetch_array($result_indentify)){
     <div class="container">
     	<img src="background.jpg" alt="背景" class="imga" >
         <?php 
-        if($_SESSION['Sex']=='m'){
-            echo "<img src=\"boy.jpg\" alt=\"boy\" class=\"sex\" \> ";
-        }else{
-            echo "<img src=\"girl.jpg\" alt=\"girl\" class=\"sex\" \> ";
-        }
-
+        if(!empty($photo_name)){
+			echo "<a href='uploadpic.php'><img src=\"http://localhost/sub/showpic.php?filename=$photo_name\" alt=\"boy\" class=\"sex\" \></a> ";
+		}
+		else{
+			if($_SESSION['Sex']=='m'){
+				echo "<a href='uploadpic.php'><img src=\"boy.jpg\" alt=\"boy\" class=\"sex\" \></a> ";
+			}else{
+				echo "<a href='uploadpic.php'><img src=\"girl.jpg\" alt=\"girl\" class=\"sex\" \></a> ";
+			}
+		}
         ?>
         <div class="row">
             <div class="col-md-2">

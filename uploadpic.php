@@ -1,3 +1,7 @@
+<?php
+session_start();
+$id = $_SESSION['Id'];
+?>
 <!DOCTYPE html>
     <html>
     <head>
@@ -6,10 +10,11 @@
     </head>
     <body>
 	<H3>圖片檔案上傳:<HR></H3>
+	<p>上傳檔案限定jpg/png</p>
     <form Action="upload.php" Method="POST" Enctype="multipart/form-data">
     <input Type="File" Name="upfile" ><br>
     <input Type="Submit" value=" 開始上傳 ">
-	<p>照片大小不得超過80kb</p>
+	<p>圖片大小不得超過80kb</p>
     </form>
 
     </body></html>

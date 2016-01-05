@@ -1,8 +1,7 @@
 <?php
-    
+	
     require('dbconn.php');
-    
-    $SQLSTR="select * from myimage where filename='"
+    $SQLSTR="select * from Account where filename='"
          . $_REQUEST["filename"] . "'";
 	$result = mysqli_query($conn,$SQLSTR);
 	
@@ -14,6 +13,7 @@
 	
 	echo base64_decode($rs['filepic']);// 輸出圖片資料
 	echo $rs['filename'];
+	
 	
 	
 	
