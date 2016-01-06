@@ -425,7 +425,9 @@ $('#Bag_Modal').on('click',function(){
           var cart= JSON.parse(response);
           //alert(cart.length);
           for(var i=0;i<cart.length;i++){
+            var number=cart[i]['No'];
             $('#bagtable').append('<tr><td>'+cart[i]['Now_id']+'</td><td>'+cart[i]['Exp']+'</td><td>'+cart[i]['Price']+'</td><td><a href="sale.php?No='+cart[i]['No']+'&Name='+cart[i]['Now_id']+'" >賣掉</a></td><tr/>');
+	    $('tr#'+number).empty();
           }
           console.log(response);
             //location.reload();
@@ -444,8 +446,7 @@ while($rs_bread=mysqli_fetch_array($result_bread)){
 }
 echo ";</script>";
 
-$select_all_oven="select COUNT(*) as total,Package from Oven left join Account on Account.Id=Oven.Owner where Owner='$id'
-";
+$select_all_oven="select COUNT(*) as total,Package from Oven left join Account on Account.Id=Oven.Owner where Owner='$id'";
 $result_all_oven=mysqli_query($conn,$select_all_oven);
 if($rs_all_oven=mysqli_fetch_array($result_all_oven)){
     $total=$rs_all_oven['total'];
@@ -469,7 +470,7 @@ if(empty($result_used_oven)){
 }else{
     echo "<script>$('#breadtable').append('<tr><td> 時間 </td><td> 麵包名稱 </td><td> 烤箱編號 </td>')";
     while($rs_used_oven=mysqli_fetch_array($result_used_oven)){
-        echo ".append('</tr><tr><td> ",$rs_used_oven['Time']," </td><td>",$rs_used_oven['Now_id'],"</td><td>",$rs_used_oven['No'],"</td>')";
+        echo ".append('</tr><tr id=",$rs_used_oven['No'],"><td> ",$rs_used_oven['Time']," </td><td>",$rs_used_oven['Now_id'],"</td><td>",$rs_used_oven['No'],"</td>')";
     }
     echo ".append('</tr>');</script>";
 }
