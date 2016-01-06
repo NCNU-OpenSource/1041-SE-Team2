@@ -80,7 +80,7 @@ while($rs_identify=mysqli_fetch_array($result_indentify)){
     	<img src="background.jpg" alt="背景" class="imga" >
         <?php 
         if(!empty($photo_name)){
-			echo "<a href='uploadpic.php'><img src=\"http://localhost/sub/showpic.php?filename=$photo_name\" alt=\"boy\" class=\"sex\" \></a> ";
+			echo "<a href='uploadpic.php'><img src=\"showpic.php?filename=$photo_name\" alt=\"boy\" class=\"sex\" \></a> ";
 		}
 		else{
 			if($_SESSION['Sex']=='m'){
