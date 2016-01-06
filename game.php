@@ -458,7 +458,7 @@ if($rs_oven=mysqli_fetch_array($result_oven)){
     $used=$rs_oven['used'];
 }
 $canuse=$total-$used;
-echo "<script>$('#oven_status').append('你有",$total,"個烤箱可以使用，使用",$rs_oven['used'],"個烤箱中。<br/>材料包數量： ",$package_num,"');</script>";
+echo "<script>$('#oven_status').append('你有",$canuse,"個烤箱可以使用，使用",$rs_oven['used'],"個烤箱中。<br/>材料包數量： ",$package_num,"');</script>";
 echo "<script>var canuse=",$canuse,";</script>";
 
 //使用中的烤箱顯示在螢幕右邊，缺倒數
