@@ -44,8 +44,8 @@
     
     #bakedbread{
         position:absolute;
-        left:81.5%;
-        width:18%;
+        left:80.5%;
+        width:19%;
         background:#ddd;
 
     }
@@ -54,7 +54,7 @@
     top:50%;
     width:100%;
     height:140px;
-    margin-top:200px;
+    margin-top:170px;
   }
   #gallery { float: left; width: 65%; }
   .gallery.custom-state-active { background: #eee; }
