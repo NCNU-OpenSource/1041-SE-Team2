@@ -468,9 +468,9 @@ $result_used_oven=mysqli_query($conn,$select_used_oven);
 if(empty($result_used_oven)){
     //do nothing
 }else{
-    echo "<script>$('#breadtable').append('<tr><td> 時間 </td><td> 麵包名稱 </td><td> 烤箱編號 </td>')";
+    echo "<script>$('#breadtable').append('<tr><td> 時間 </td><td> 麵包名稱 </td>')";
     while($rs_used_oven=mysqli_fetch_array($result_used_oven)){
-        echo ".append('</tr><tr id=",$rs_used_oven['No'],"><td> ",$rs_used_oven['Time']," </td><td>",$rs_used_oven['Now_id'],"</td><td>",$rs_used_oven['No'],"</td>')";
+        echo ".append('</tr><tr id=",$rs_used_oven['No'],"><td> ",$rs_used_oven['Time']," </td><td>",$rs_used_oven['Now_id'],"</td>')";
     }
     echo ".append('</tr>');</script>";
 }
