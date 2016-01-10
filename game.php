@@ -34,8 +34,8 @@ if($rs_level=mysqli_fetch_array($result_level)){
   if($exp>=$rs_level['Exp']){
       $UP="update Account set Level=Level+1 where id='$id' ";
       mysqli_query($conn,$UP);
-      echo "<script>alert('等級提升！');</script>";
-      header('location:game.php');
+      echo "<script>alert('等級提升！');setTimeout('window.location.href=\"game.php\"',10)</script>";
+      //header('location:game.php');
   }  
 }
 
@@ -76,6 +76,7 @@ while($rs_identify=mysqli_fetch_array($result_indentify)){
     <link rel="stylesheet" href="happyK.css">
 </head>
 <body>
+<iframe width="0" height="0" src="https://www.youtube.com/embed/i3yH9mIliBk?list=PLw0uG_yajKILMajsl42xid54TxREOuakM&autoplay=1" frameborder="0" allowfullscreen></iframe>
     <div class="container">
     	<img src="background.jpg" alt="背景" class="imga" >
         <?php 
@@ -437,7 +438,7 @@ $('#Bag_Modal').on('click',function(){
 });
 </script>
 <?php
-$select_bread="select Name,Count from Bread where Level <= $level";
+$select_bread="select Name,Count from Bread where Level <= $level order by Count desc";
 $result_bread=mysqli_query($conn,$select_bread);
 
 echo "<script>$('#gallery')";
@@ -463,7 +464,7 @@ echo "<script>$('#oven_status').append('你有",$canuse,"個烤箱可以使用�
 echo "<script>var canuse=",$canuse,";</script>";
 
 //使用中的烤箱顯示在螢幕右邊，缺倒數
-$select_used_oven="select * from Oven where Owner='$id' and State=1 ";
+$select_used_oven="select * from Oven where Owner='$id' and State=1 order by Time";
 $result_used_oven=mysqli_query($conn,$select_used_oven);
 if(empty($result_used_oven)){
     //do nothing
