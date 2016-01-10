@@ -1,15 +1,15 @@
 # 1041-SE-Team2
 
 #1.Use case
-
+ ![Alt text](https://github.com/NCNU-OpenSource/1041-SE-Team2/raw/master/usecase.jpg)
 #2.DFD
+![Alt text](https://github.com/NCNU-OpenSource/1041-SE-Team2/raw/master/DFD.png)
 
+#3.Classè¨­è¨ˆ
+![Alt text](https://github.com/NCNU-OpenSource/1041-SE-Team2/raw/master/classd.png)
 
-#3.Class³]­p
-
-
-#5.ÃB¥~¦h°µ¨º¨Ç¥\¯à
-1.­I´º­µ¼Ö¦Û°Ê¼·©ñ
-2.¤ä´©ª±®a¤W¶Ç¦Û¤vªº¤jÀY¶K
-3.¯N½c©ì©Ô¥\¯à
+#5.é¡å¤–å¤šåšé‚£äº›åŠŸèƒ½
+1.èƒŒæ™¯éŸ³æ¨‚è‡ªå‹•æ’¥æ”¾
+2.æ”¯æ´ç©å®¶ä¸Šå‚³è‡ªå·±çš„å¤§é ­è²¼
+3.çƒ¤ç®±æ‹–æ‹‰åŠŸèƒ½
 
